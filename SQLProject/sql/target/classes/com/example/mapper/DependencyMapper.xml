@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.DependencyMapper">
+    <select id="list" resultType="com.example.pojo.Dependency">
+        select id,`key`,`value`
+        from sql2023.dependency
+        <where>
+            <if test="key != null and key != ''">
+                `key`
+                like concat('%',
+                #{key},
+                '%'
+                )
+            </if>
+            <if test="value != null and value != ''">
+                and `value`
+                like concat('%',
+                #{value},
+                '%'
+                )
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteByIds">
+        delete
+        from sql2023.dependency
+        where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="update">
+        update sql2023.dependency
+        <set>
+            <if test="key != null and key != ''">
+                `key`
+                =
+                #{key},
+            </if>
+            <if test="value != null and value != ''">
+                `value`
+                =
+                #{value},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>
